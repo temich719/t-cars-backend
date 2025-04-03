@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: main-cars-service
+  # database config
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/tcars
+    username: postgres
+    password: 007953hh
+    # connection pool config
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 50
+  # uploading images restriction
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+  # rabbit connection
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  # spring cloud stream for rabbitmq (define binder between exchanger and queue)
+  cloud:
+    stream:
+      default-binder: rabbit
+      # output channels for rabbit messages (queue will be named as destination.consumerGroup)
+      bindings:
+        outputChannel:
+          destination: toStorageCarImageQueue
+          content-type: application/json
+        avatarOutputChannel:
+          destination: toStorageAvatarImageQueue
+          content-type: application/json

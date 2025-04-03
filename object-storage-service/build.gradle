@@ -21,10 +21,14 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url "https://repo.spring.io/release" }
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+    implementation 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
     implementation 'io.minio:minio:8.5.17'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

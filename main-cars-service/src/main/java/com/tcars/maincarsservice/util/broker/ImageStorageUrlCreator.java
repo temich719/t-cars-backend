@@ -18,8 +18,8 @@ public class ImageStorageUrlCreator {
     private static final String CAR_IMAGE_BUCKET_NAME = "cars-bucket";
     private static final String USER_AVATAR_BUCKET_NAME = "avatar-bucket";
     private static final String MIN_IO_ADDRESS = "http://minio-server:9000/";
-    private static final String CAR_TO_STORAGE_DESTINATION = "toStorageCarImageQueue";
-    private static final String AVATAR_TO_STORAGE_DESTINATION = "toStorageAvatarImageQueue";
+    private static final String CAR_TO_STORAGE_CHANNEL = "outputChannel";
+    private static final String AVATAR_TO_STORAGE_CHANNEL = "avatarOutputChannel";
 
     //object that helps us send data to broker (spring cloud feature to send info to destination)
     private final StreamBridge streamBridge;
@@ -35,7 +35,7 @@ public class ImageStorageUrlCreator {
             String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
             try {
                 ImageMessage imageMessage = new ImageMessage(fileName, file.getBytes());
-                sendImageToStorage(CAR_TO_STORAGE_DESTINATION, imageMessage);
+                sendImageToStorage(CAR_TO_STORAGE_CHANNEL, imageMessage);
                 return MIN_IO_ADDRESS + CAR_IMAGE_BUCKET_NAME + "/" + fileName;
             } catch (IOException e) {
                 throw new SendImageToStorageException("Can't send image (troubles with network or file access error)");
@@ -46,15 +46,15 @@ public class ImageStorageUrlCreator {
     public String createAvatarUrl(MultipartFile avatar) throws SendImageToStorageException {
         try {
             String fileName = MIN_IO_ADDRESS + USER_AVATAR_BUCKET_NAME + "/" + avatar.getOriginalFilename();
-            sendImageToStorage(AVATAR_TO_STORAGE_DESTINATION, new ImageMessage(fileName, avatar.getBytes()));
+            sendImageToStorage(AVATAR_TO_STORAGE_CHANNEL, new ImageMessage(fileName, avatar.getBytes()));
             return fileName;
         } catch (IOException e) {
             throw new SendImageToStorageException("Can't send image (troubles with network or file access error)");
         }
     }
 
-    private void sendImageToStorage(String destination, ImageMessage imageMessage) {
-        streamBridge.send(destination, imageMessage);
+    private void sendImageToStorage(String channel, ImageMessage imageMessage) {
+        streamBridge.send(channel, imageMessage);
     }
 
 }

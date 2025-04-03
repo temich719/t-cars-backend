@@ -1,0 +1,32 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: object-storage-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      default-binder: rabbit
+      bindings:
+        carImageInputChannel:
+          destination: toStorageCarImageQueue
+          content-type: application/json
+          group: CarImageStorage
+        avatarImageInputChannel:
+          destination: toStorageAvatarImageQueue
+          content-type: application/json
+          group: AvatarImageStorage
+
+# minIO config
+minio:
+  url: http://minio-server:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  buckets:
+    avatars: avatar-bucket
+    cars: cars-bucket
