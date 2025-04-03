@@ -31,6 +31,12 @@ public class Car {
     @ManyToMany(mappedBy = "userFavoriteCars")
     private Set<User> users = new HashSet<>();
 
+    public Car(String name, String priceInUsd, String description) {
+        this.name = name;
+        this.priceInUsd = priceInUsd;
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

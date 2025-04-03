@@ -39,6 +39,15 @@ public class User {
     )
     private Set<Car> userFavoriteCars = new HashSet<>();
 
+    public User(String name, String surname, String avatarPath, String login, String hashedPassword, String phone) {
+        this.name = name;
+        this.surname = surname;
+        this.avatarPath = avatarPath;
+        this.login = login;
+        this.hashedPassword = hashedPassword;
+        this.phone = phone;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
